@@ -21,13 +21,14 @@ class PostForm extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-
+    const { title, body } = this.state;
+    const { createPost } = this.props;
     const post = {
-      title: this.state.title,
-      body: this.state.body,
+      title,
+      body,
     };
 
-    this.props.createPost(post);
+    createPost(post);
     this.setState({
       title: '',
       body: '',
@@ -35,29 +36,25 @@ class PostForm extends Component {
   }
 
   render() {
+    const { title, body } = this.state;
     return (
       <div>
         <h1>Add Post</h1>
         <form onSubmit={this.onSubmit}>
           <div>
-            <label>Title: </label>
-            <br />
-            <input
-              type="text"
-              name="title"
-              onChange={this.onChange}
-              value={this.state.title}
-            />
+            <label htmlFor="title">
+              Title:
+              <br />
+              <input type="text" name="title" onChange={this.onChange} value={title} />
+            </label>
           </div>
           <br />
           <div>
-            <label>Body: </label>
-            <br />
-            <textarea
-              name="body"
-              onChange={this.onChange}
-              value={this.state.body}
-            />
+            <label htmlFor="body">
+              Body:
+              <br />
+              <textarea name="body" onChange={this.onChange} value={body} />
+            </label>
           </div>
           <br />
           <button type="submit">Submit</button>

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -5,19 +6,21 @@ import { connect } from 'react-redux';
 import { fetchPosts } from '../actions/postActions';
 
 class Posts extends React.Component {
-  componentWillMount() {
-    this.props.fetchPosts();
+  componentDidMount() {
+    const { fetchPosts } = this.props;
+    fetchPosts();
   }
 
-  componentWillUpdate(nextProps) {
+  UNSAFE_componentWillUpdate(nextProps) {
+    const { posts } = this.props;
     if (nextProps.newPost) {
-      this.props.posts.unshift(nextProps.newPost);
+      posts.unshift(nextProps.newPost);
     }
   }
 
   render() {
     const { posts } = this.props;
-    const postItems = posts.map((post) => (
+    const postItems = posts.map(post => (
       <div key={post.id}>
         <h3>{post.title}</h3>
         <p>{post.body}</p>
@@ -32,13 +35,28 @@ class Posts extends React.Component {
   }
 }
 
-Posts.propTypes = {
-  fetchPosts: PropTypes.func.isRequired,
-  posts: PropTypes.array.isRequired,
-  newPost: PropTypes.object,
+Posts.defaultProps = {
+  newPost: {},
 };
 
-const mapStateToProps = (state) => ({
+Posts.propTypes = {
+  fetchPosts: PropTypes.func.isRequired,
+  posts: PropTypes.arrayOf(
+    PropTypes.shape({
+      body: PropTypes.string,
+      title: PropTypes.string,
+      id: PropTypes.number,
+      userId: PropTypes.number,
+    }),
+  ).isRequired,
+  newPost: PropTypes.shape({
+    body: PropTypes.string,
+    title: PropTypes.string,
+    id: PropTypes.number,
+  }),
+};
+
+const mapStateToProps = state => ({
   posts: state.posts.items,
   newPost: state.posts.item,
 });
